@@ -9,6 +9,14 @@ export default function ApplicationForm({ job }: { job: any }) {
     const [isUploading, setIsUploading] = useState(false)
     const [uploadStatus, setUploadStatus] = useState('')
     const [error, setError] = useState('')
+    const [fileName, setFileName] = useState('')
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0]
+        if (file) {
+            setFileName(file.name)
+        }
+    }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -90,19 +98,21 @@ export default function ApplicationForm({ job }: { job: any }) {
                 <div className="mt-2 flex justify-center rounded-xl border border-dashed border-slate-300 px-6 py-10 bg-slate-50/50 hover:bg-slate-50 transition-colors group">
                     <div className="text-center">
                         <div className="mx-auto h-12 w-12 text-slate-300 bg-white rounded-full flex items-center justify-center shadow-sm ring-1 ring-slate-200 group-hover:ring-indigo-200 group-hover:text-indigo-500 transition-all">
-                            <Upload className="h-6 w-6" aria-hidden="true" />
+                            {fileName ? <CheckCircle className="h-6 w-6 text-emerald-500" /> : <Upload className="h-6 w-6" aria-hidden="true" />}
                         </div>
                         <div className="mt-4 flex text-sm leading-6 text-slate-600 text-center justify-center">
                             <label
                                 htmlFor="resume"
                                 className="relative cursor-pointer rounded-md font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                             >
-                                <span>Upload a file</span>
-                                <input id="resume" name="resume" type="file" accept=".pdf" className="sr-only" required />
+                                <span>{fileName ? 'Change file' : 'Upload a file'}</span>
+                                <input id="resume" name="resume" type="file" accept=".pdf" className="sr-only" required onChange={handleFileChange} />
                             </label>
-                            <p className="pl-1">or drag and drop</p>
+                            <p className="pl-1">{!fileName && 'or drag and drop'}</p>
                         </div>
-                        <p className="text-xs leading-5 text-slate-500">PDF up to 5MB</p>
+                        <p className="text-xs leading-5 text-slate-500">
+                            {fileName ? <span className="text-emerald-600 font-medium">{fileName}</span> : 'PDF up to 5MB'}
+                        </p>
                     </div>
                 </div>
             </div>

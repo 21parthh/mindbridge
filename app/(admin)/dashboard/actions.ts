@@ -17,6 +17,8 @@ export async function getCandidates() {
         id,
         name,
         email,
+        phone,
+        linkedin_url,
         resume_url
       ),
       job:jobs (
