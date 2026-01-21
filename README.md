@@ -26,6 +26,9 @@ The goal of this project is to demonstrate **production-ready SaaS architecture*
 
 ## Features
 
+### <span style="color:#16a34a;">🎁 Bonus Feature: Email Update Notifications</span>
+- Automated email notifications sent to candidates using resend
+
 ### Job Management
 - Create, edit, and view job postings
 - Fields:
@@ -70,8 +73,8 @@ The goal of this project is to demonstrate **production-ready SaaS architecture*
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/ats-nextjs-supabase.git
-cd ats-nextjs-supabase
+git clone https://github.com/21parthh/mindbridge
+cd mindbridge
 ```
 
 ### 2. Set Up Environment Variables
