@@ -8,7 +8,7 @@ create table public.jobs (
   description text not null,
   department text not null,
   location text not null,
-  type text not null check (type in ('Full-time', 'Part-time', 'Contract')),
+  type text not null check (type in ('Full-time', 'Part-time', 'Contract', 'Internship')),
   status text not null default 'Draft' check (status in ('Draft', 'Published', 'Closed')),
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null

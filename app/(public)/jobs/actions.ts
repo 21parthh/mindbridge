@@ -5,8 +5,6 @@ import { redirect } from 'next/navigation'
 import { Resend } from 'resend'
 import { CandidateEmailTemplate, RecruiterEmailTemplate } from '@/components/EmailTemplate'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 // Renamed from submitApplication and removed file upload logic
 export async function saveApplicationData(formData: FormData, resumeUrl: string) {
     const supabase = await createClient()
@@ -61,37 +59,45 @@ export async function saveApplicationData(formData: FormData, resumeUrl: string)
     }
 
     // 4. Send Emails (Resend)
-    try {
-        // Email to Candidate
-        const { error: candidateError } = await resend.emails.send({
-            from: 'Mindbridge Recruiting <connect@templeadsinfotech.com>',
-            to: [email],
-            subject: `Application Received: ${jobTitle}`,
-            react: CandidateEmailTemplate({ name, jobTitle }) as any,
-        })
+    // Instantiate Resend lazily to prevent module-level errors if API key is missing
+    const resendApiKey = process.env.RESEND_API_KEY
 
-        if (candidateError) {
-            console.error('Resend Candidate Error:', candidateError)
-        } else {
-            console.log('Candidate email sent successfully')
+    if (resendApiKey) {
+        const resend = new Resend(resendApiKey)
+        try {
+            // Email to Candidate
+            const { error: candidateError } = await resend.emails.send({
+                from: 'Mindbridge Recruiting <connect@templeadsinfotech.com>',
+                to: [email],
+                subject: `Application Received: ${jobTitle}`,
+                react: CandidateEmailTemplate({ name, jobTitle }) as any,
+            })
+
+            if (candidateError) {
+                console.error('Resend Candidate Error:', candidateError)
+            } else {
+                console.log('Candidate email sent successfully')
+            }
+
+            // Email to Recruiter
+            const { error: recruiterError } = await resend.emails.send({
+                from: 'Mindbridge Recruiting <connect@templeadsinfotech.com>',
+                to: ['connect@templeadsinfotech.com'],
+                subject: `New Candidate: ${name} for ${jobTitle}`,
+                react: RecruiterEmailTemplate({ name, jobTitle }) as any,
+            })
+
+            if (recruiterError) {
+                console.error('Resend Recruiter Error:', recruiterError)
+            } else {
+                console.log('Recruiter email sent successfully')
+            }
+        } catch (emailError) {
+            console.error('Unexpected Email Error:', emailError)
+            // We do NOT throw here, as the application itself was successful.
         }
-
-        // Email to Recruiter
-        const { error: recruiterError } = await resend.emails.send({
-            from: 'Mindbridge Recruiting <connect@templeadsinfotech.com>',
-            to: ['connect@templeadsinfotech.com'],
-            subject: `New Candidate: ${name} for ${jobTitle}`,
-            react: RecruiterEmailTemplate({ name, jobTitle }) as any,
-        })
-
-        if (recruiterError) {
-            console.error('Resend Recruiter Error:', recruiterError)
-        } else {
-            console.log('Recruiter email sent successfully')
-        }
-    } catch (emailError) {
-        console.error('Unexpected Email Error:', emailError)
-        // We do NOT throw here, as the application itself was successful.
+    } else {
+        console.warn('RESEND_API_KEY is missing. Email notifications were skipped.')
     }
 
     redirect(`/jobs/${jobId}/apply/success`)
