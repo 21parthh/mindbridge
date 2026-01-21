@@ -1,19 +1,44 @@
 import Link from 'next/link'
 import { Briefcase, Key, ArrowRight, Search, MapPin, Clock } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import JobFilters from '@/components/JobFilters'
 
 export const metadata = {
   title: 'Mindbridge - Find Your Future',
   description: 'Connect with top companies and find your dream job today.',
 }
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const resolvedSearchParams = await searchParams
   const supabase = await createClient()
-  const { data: jobs } = await supabase
+
+  let query = supabase
     .from('jobs')
     .select('*')
     .eq('status', 'Published')
     .order('created_at', { ascending: false })
+
+  // Apply filters
+  if (resolvedSearchParams.query) {
+    const searchTerm = resolvedSearchParams.query as string
+    query = query.ilike('title', `%${searchTerm}%`)
+  }
+
+  if (resolvedSearchParams.location) {
+    const locationTerm = resolvedSearchParams.location as string
+    query = query.ilike('location', `%${locationTerm}%`)
+  }
+
+  if (resolvedSearchParams.type) {
+    const typeTerm = resolvedSearchParams.type as string
+    query = query.eq('type', typeTerm)
+  }
+
+  const { data: jobs } = await query
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans selection:bg-indigo-100 selection:text-indigo-900">
@@ -67,17 +92,17 @@ export default async function Home() {
         </div>
       </div>
 
-
-
       {/* Job Listings */}
       <main id="jobs" className="py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center mb-16">
+          <div className="mx-auto max-w-2xl text-center mb-12">
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Open Positions</h2>
             <p className="mt-2 text-lg leading-8 text-slate-600">
               Find the role that fits you perfectly.
             </p>
           </div>
+
+          <JobFilters />
 
           {!jobs || jobs.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-3xl border border-slate-200 shadow-sm mx-auto max-w-2xl">
@@ -85,7 +110,11 @@ export default async function Home() {
                 <Search className="h-8 w-8 text-slate-400" />
               </div>
               <h3 className="mt-2 text-lg font-semibold text-slate-900">No jobs found</h3>
-              <p className="mt-1 text-sm text-slate-500">We're currently updating our listings. Check back soon!</p>
+              <p className="mt-1 text-sm text-slate-500">
+                {resolvedSearchParams.query || resolvedSearchParams.location || resolvedSearchParams.type
+                  ? 'Try adjusting your filters to find what you\'re looking for.'
+                  : 'We\'re currently updating our listings. Check back soon!'}
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
@@ -107,9 +136,10 @@ export default async function Home() {
                     <h3 className="text-lg font-bold leading-6 text-slate-900 group-hover:text-indigo-600 transition-colors">
                       {job.title}
                     </h3>
-                    <p className="mt-4 text-sm leading-6 text-slate-600 line-clamp-3">
+                    <div className="mt-4 text-sm leading-6 text-slate-600 line-clamp-3">
+                      {/* Markdown descriptions might have special chars, simpler to just text-overflow or basic strip if needed, but CSS line-clamp handles visual overflow nicely */}
                       {job.description}
-                    </p>
+                    </div>
                   </div>
                   <div className="bg-slate-50 px-8 py-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-slate-500 group-hover:bg-indigo-50/50 transition-colors">
                     <div className="flex items-center gap-1">
