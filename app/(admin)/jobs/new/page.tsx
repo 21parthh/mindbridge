@@ -138,7 +138,7 @@ export default function NewJobPage() {
                                 />
                             </div>
                             <p className="mt-3 text-sm leading-6 text-slate-500">
-                                You can use plain text. Markdown support coming soon.
+                                Markdown is supported. Use **bold**, *italics*, lists, etc.
                             </p>
                         </div>
                     </div>

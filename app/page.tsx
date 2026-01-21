@@ -22,9 +22,7 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-2">
-              <div className="bg-indigo-600 p-1.5 rounded-lg">
-                <Briefcase className="h-5 w-5 text-white" />
-              </div>
+
               <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600">
                 Mindbridge
               </span>
@@ -69,15 +67,7 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* Stats/Social Proof (Optional visual filler) */}
-      <div className="border-y border-slate-200 bg-white/50">
-        <div className="max-w-7xl mx-auto px-6 py-8 flex justify-center gap-8 md:gap-16 text-slate-400 grayscale opacity-70">
-          {/* Placeholders for logos if needed, strictly purely aesthetic divs for now */}
-          <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-current" /> Startup Inc</div>
-          <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-current" /> TechFlow</div>
-          <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-current" /> DevCorp</div>
-        </div>
-      </div>
+
 
       {/* Job Listings */}
       <main id="jobs" className="py-24 sm:py-32">

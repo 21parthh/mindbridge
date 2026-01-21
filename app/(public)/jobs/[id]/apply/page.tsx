@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import ApplicationForm from '@/components/ApplicationForm'
+import MarkdownRenderer from '@/components/MarkdownRenderer'
 
 // Correct SearchParams handling for Next.js 15+ (if using that) or 14
 // Using props params approach for dynamic route
@@ -60,9 +61,7 @@ export default async function JobApplicationPage({
                             </div>
                         </div>
 
-                        <div className="prose prose-slate prose-sm max-w-none text-slate-600 whitespace-pre-line leading-relaxed">
-                            {job.description}
-                        </div>
+                        <MarkdownRenderer content={job.description} />
                     </div>
                 </div>
 

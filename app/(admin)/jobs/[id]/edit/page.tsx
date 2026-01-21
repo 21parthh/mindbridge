@@ -153,6 +153,9 @@ export default async function EditJobPage({
                                     defaultValue={job.description}
                                     className="block w-full rounded-lg border-0 py-2.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3 bg-slate-50 focus:bg-white transition-all"
                                 />
+                                <p className="mt-3 text-sm leading-6 text-slate-500">
+                                    Markdown is supported. Use **bold**, *italics*, lists, etc.
+                                </p>
                             </div>
                         </div>
                     </div>

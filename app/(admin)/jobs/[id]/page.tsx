@@ -2,6 +2,7 @@ import { getJob, deleteJob } from '../actions'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { ArrowLeft, Pencil, Trash2, MapPin, Briefcase, Clock, Calendar } from 'lucide-react'
+import MarkdownRenderer from '@/components/MarkdownRenderer'
 
 export default async function JobDetailPage({
     params,
@@ -74,41 +75,40 @@ export default async function JobDetailPage({
 
                 <div className="px-6 py-8 sm:px-10 grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div className="md:col-span-2 space-y-8">
-                        <div>
-                            <h3 className="text-sm font-semibold leading-6 text-slate-900 mb-4 uppercase tracking-wide">Description</h3>
-                            <div className="prose prose-slate prose-sm max-w-none text-slate-600 whitespace-pre-line leading-relaxed">
-                                {job.description}
-                            </div>
+                        <h3 className="text-sm font-semibold leading-6 text-slate-900 mb-4 uppercase tracking-wide">Description</h3>
+                        <div className="bg-slate-50/50 rounded-xl p-6 border border-slate-100">
+                            <MarkdownRenderer content={job.description} />
                         </div>
                     </div>
+                </div>
 
-                    <div className="md:col-span-1 border-l border-slate-100 pl-8 space-y-8">
-                        <div>
-                            <h3 className="text-sm font-semibold leading-6 text-slate-900 mb-4 uppercase tracking-wide">Details</h3>
-                            <ul className="space-y-4 text-sm text-slate-600">
-                                <li className="flex items-center gap-3">
-                                    <div className="p-2 bg-indigo-50 rounded-lg">
-                                        <Briefcase className="h-5 w-5 text-indigo-600" />
-                                    </div>
-                                    <span className="font-medium">{job.department}</span>
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <div className="p-2 bg-indigo-50 rounded-lg">
-                                        <MapPin className="h-5 w-5 text-indigo-600" />
-                                    </div>
-                                    <span className="font-medium">{job.location}</span>
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <div className="p-2 bg-indigo-50 rounded-lg">
-                                        <Clock className="h-5 w-5 text-indigo-600" />
-                                    </div>
-                                    <span className="font-medium">{job.type}</span>
-                                </li>
-                            </ul>
-                        </div>
+                <div className="md:col-span-1 border-l border-slate-100 pl-8 space-y-8">
+                    <div>
+                        <h3 className="text-sm font-semibold leading-6 text-slate-900 mb-4 uppercase tracking-wide">Details</h3>
+                        <ul className="space-y-4 text-sm text-slate-600">
+                            <li className="flex items-center gap-3">
+                                <div className="p-2 bg-indigo-50 rounded-lg">
+                                    <Briefcase className="h-5 w-5 text-indigo-600" />
+                                </div>
+                                <span className="font-medium">{job.department}</span>
+                            </li>
+                            <li className="flex items-center gap-3">
+                                <div className="p-2 bg-indigo-50 rounded-lg">
+                                    <MapPin className="h-5 w-5 text-indigo-600" />
+                                </div>
+                                <span className="font-medium">{job.location}</span>
+                            </li>
+                            <li className="flex items-center gap-3">
+                                <div className="p-2 bg-indigo-50 rounded-lg">
+                                    <Clock className="h-5 w-5 text-indigo-600" />
+                                </div>
+                                <span className="font-medium">{job.type}</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
+
     )
 }
