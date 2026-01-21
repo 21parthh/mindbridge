@@ -1,55 +1,110 @@
-# Mindbridge - Job Management & Candidate Pipeline
+# Applicant Tracking System (ATS)
 
-A full-stack Next.js application for managing job postings and tracking candidates through a recruitment pipeline.
+## Project Overview
+
+This project is a **basic Applicant Tracking System (ATS)** built using **Next.js 14 and Supabase**. It enables recruiters to create and manage job postings, track candidates through a hiring pipeline, and review applications via a Kanban-style dashboard. Public users can apply to jobs without authentication, while recruiters manage everything through protected routes.
+
+The goal of this project is to demonstrate **production-ready SaaS architecture**, including authentication, secure file uploads, database relationships, Row Level Security (RLS), and efficient data fetching using modern Next.js App Router patterns.
+
+---
+
+## Tech Stack
+
+- **Frontend:** Next.js 14 (App Router), TypeScript (strict)
+- **Styling:** Tailwind CSS
+- **UI Components:** shadcn/ui
+- **Backend / BaaS:** Supabase
+  - PostgreSQL Database
+  - Supabase Auth (Email/Password)
+  - Supabase Storage (Resume uploads)
+- **Architecture:**
+  - Server Components
+  - Server Actions for mutations
+  - Minimal client-side state
+
+---
 
 ## Features
 
-- **Job Management**: Create, edit, and publish job postings.
-- **Candidate Pipeline**: Kanban board to drag-and-drop candidates between stages (Applied, Screening, Interview, etc.).
-- **Public Application**: Public-facing pages for candidates to view jobs and apply with resumes.
-- **Authentication**: Secure recruiter access using Supabase Auth.
-- **Resume Storage**: Secure PDF upload and storage using Supabase Storage.
+### Job Management
+- Create, edit, and view job postings
+- Fields:
+  - Job title
+  - Description
+  - Department
+  - Location
+  - Employment type
+  - Status (Draft, Published, Closed)
+- Job listing view with:
+  - Filter by department and status
+  - Search by job title
+  - Click to view/edit individual jobs
 
-## Setup Instructions
+### Candidate Pipeline
+- Public job application form at `/jobs/[jobId]/apply`
+- Fields:
+  - Full name
+  - Email
+  - Phone
+  - LinkedIn URL (optional)
+  - Resume upload (PDF, max 5MB)
+- Automatic creation of candidate in **Applied** stage
+- Recruiter dashboard with Kanban board:
+  - Applied → Screening → Interview → Offer → Rejected
+- Drag-and-drop candidates between stages
+- Candidate detail view:
+  - Full candidate information
+  - Resume preview/download
+  - Stage movement controls
+  - Application timestamp and stage history
 
-### 1. Prerequisites
+### Authentication & Access Control
+- Recruiter authentication using Supabase Auth
+- Protected routes for dashboard and job management
+- Public access for job application pages
+- Proper session handling across the app
 
-- Node.js 18+
-- Supabase Account
+---
 
-### 2. Environment Setup
+## Setup Instructions (Local)
 
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-username/ats-nextjs-supabase.git
+cd ats-nextjs-supabase
+```
+
+### 2. Set Up Environment Variables
 Create a `.env.local` file in the root directory:
+```bash
+cp .env.example .env.local
+```
 
+Edit the `.env.local` file with your Supabase credentials:
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+RESEND_API_KEY=your_resend_api_key
 ```
 
-### 3. Supabase Configuration
-
-1.  **Run SQL Schema**: Go to your Supabase project's SQL Editor and run the contents of [`supabase/schema.sql`](./supabase/schema.sql). This will create:
-    -   Tables: `jobs`, `candidates`, `applications`
-    -   RLS Policies
-    -   Indexes
-
-2.  **Create Storage Bucket**:
-    -   Go to Storage > Buckets
-    -   Create a new public bucket named `resumes`.
-    -   Alternatively, run this SQL if your permissions allow:
-        ```sql
-        insert into storage.buckets (id, name, public) values ('resumes', 'resumes', true);
-        ```
-
-3.  **Create Test User**:
-    -   Go to Authentication > Users
-    -   Add a user (e.g., `recruiter@example.com` / `password123`)
-
-### 4. Running Locally
-
+### 3. Install Dependencies
 ```bash
 npm install
+```
+
+### 4. Run the Development Server
+```bash
 npm run dev
 ```
 
-Visit `http://localhost:3000`.
+Visit `http://localhost:3000` in your browser.
+```
+
+### 5. Database Setup
+
+Paste Schema.sql file content in your Supabase project's SQL Editor and run it.
+
+Create a new storage bucket named `resumes` in your Supabase project's Storage section.
+
+Conect Supabase with Url and Key
+
